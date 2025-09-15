@@ -1,51 +1,57 @@
-🔍 Bug Predictor using Machine Learning
+# Bug Predictor – Starter Project
 
-Bug-Predictor is an intelligent tool that leverages machine learning to identify bug-prone files in software repositories. By mining Git history and extracting static code metrics, it trains predictive models to surface high-risk areas in your codebase — helping developers prioritize testing, code review, and refactoring efforts.
+Predict bug-prone files/functions by combining static code metrics, Git mining, and machine learning.
+This starter gives you code for feature extraction, training, and a Streamlit dashboard.
 
-🚀 Key Features
+## 0) Prerequisites
+- Python 3.10+
+- Git installed
 
-🧠 Machine Learning Models: Uses Random Forest and XGBoost for accurate bug prediction.
+## 1) Setup
+```bash
+# clone your target repo locally (example)
+git clone https://github.com/your-org/your-repo.git ~/code/your-repo
 
-📊 Static Code Analysis: Extracts code complexity, churn, and other static metrics.
+# create venv
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+source .venv/bin/activate
 
-🕵️ Git History Mining: Analyzes commit patterns, file changes, and bug-introducing commits (BICs).
+# install deps
+pip install -r requirements.txt
+```
 
-🔎 Risky File Identification: Highlights files most likely to contain bugs in future commits.
+## 2) Build a dataset from a repo
+```bash
+python src/build_dataset.py --repo ~/code/your-repo --since_months 12 --out data/your_repo_dataset.csv
+```
 
-📈 Feature Importance: Offers insights into which metrics contribute most to predictions.
+## 3) Train models
+```bash
+python src/model_train.py --data data/your_repo_dataset.csv --model_out models/bug_predictor.joblib
+```
 
-⚙️ Customizable Pipeline: Easily extendable with other ML models or metrics.
+## 4) Run the dashboard
+```bash
+streamlit run app/streamlit_app.py -- --repo ~/code/your-repo --model models/bug_predictor.joblib --since_months 6
+```
 
-🎯 Use Cases
-
-Software Quality Assurance: Focus testing efforts on the riskiest parts of your codebase.
-
-Developer Productivity: Reduce time spent reviewing low-risk code.
-
-Continuous Integration: Integrate predictions into your CI pipeline to flag high-risk changes.
-
-📁 Input & Output
-
-Input: A Git repository (local or remote).
-
-Output:
-
-Bug-prone files with risk scores
-
-Visualizations of commit behavior
-
-Feature importance graphs
-
-🛠️ Technologies Used
-
-Python
-
-Scikit-learn
-
-XGBoost
-
-GitPython
-
-Pandas, NumPy, Matplotlib
-
-(Optional) DVC for data and model versioning
+## 5) Project structure
+```
+.
+├── app/
+│   └── streamlit_app.py
+├── data/
+├── models/
+├── notebooks/
+├── src/
+│   ├── build_dataset.py
+│   ├── model_train.py
+│   ├── miners/
+│   │   └── git_miner.py
+│   └── utils/
+│       ├── static_metrics.py
+│       └── io_utils.py
+├── requirements.txt
+└── README.md
+```
